@@ -1,11 +1,8 @@
 // @flow
 
-import { isReactNative } from 'detect-bundler'
-
 import { makeBrowserIo } from './io/browser/browser-io.js'
 import { makeFakeIos } from './io/fake/fake-io.js'
 import { isNode, makeNodeIo } from './io/node/node-io.js'
-import { makeReactNativeIo } from './io/react-native/react-native-io.js'
 import { makeFakeWorld } from './modules/fake/fake-world.js'
 import { makeContext } from './modules/root.js'
 import {
@@ -24,9 +21,6 @@ let fakeWorlds: Array<EdgeFakeWorld> = []
 export function makeEdgeContext (
   opts: EdgeContextOptions
 ): Promise<EdgeContext> {
-  if (isReactNative) {
-    return makeReactNativeIo().then(io => makeContext(io, opts))
-  }
   if (isNode) {
     const { path = './edge' } = opts
     return makeContext(makeNodeIo(path), opts)

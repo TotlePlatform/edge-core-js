@@ -1,39 +1,16 @@
-const packageJson = require('./package.json')
-
-const bundledModules = [
-  'elliptic',
-  'ethereumjs-tx',
-  'ethereumjs-util',
-  'hash.js',
-  'hmac-drbg'
-]
-
-const externals = [
-  ...Object.keys(packageJson.dependencies).filter(
-    name => bundledModules.indexOf(name) < 0
-  ),
-  '@babel/runtime/regenerator',
-  'react-native',
-  'react-native-fast-crypto',
-  'react-native-tcp',
-  'react-native-tcp/tls'
-]
-
 module.exports = {
   devtool: 'source-map',
-  entry: './build/react-native.js',
-  externals,
+  entry: './src/platform/react-native/server.js',
   module: {
     rules: [
       {
         test: /\.js$/,
-        use: ['source-map-loader'],
-        enforce: 'pre'
+        exclude: [/node_modules/],
+        use: 'babel-loader'
       }
     ]
   },
   output: {
-    filename: packageJson['react-native'],
-    libraryTarget: 'commonjs'
+    filename: 'lib/react-native/edge-core-server.js'
   }
 }

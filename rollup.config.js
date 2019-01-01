@@ -30,24 +30,39 @@ export default [
     ]
   },
   // React Native build:
-  {
-    external,
-    input: 'src/index.js',
-    output: {
-      file: 'build/react-native.js',
-      format: 'cjs',
-      sourcemap: true
-    },
-    plugins: [
-      alias({ './io/node/node-io.js': 'src/io/node/node-dummy.js' }),
-      babel()
-    ]
-  },
+  // {
+  //   external,
+  //   input: 'src/index.js',
+  //   output: {
+  //     file: 'build/react-native.js',
+  //     format: 'cjs',
+  //     sourcemap: true
+  //   },
+  //   plugins: [
+  //     alias({
+  //       './io/node/node-io.js': 'src/io/node/node-dummy.js',
+  //       './io/react-native/react-native-io.js':
+  //         'src/io/react-native/react-native-io.js'
+  //     }),
+  //     babel()
+  //   ]
+  // },
   // Client-side methods:
   {
     external: ['yaob'],
     input: 'src/client-side.js',
     output: { file: 'lib/client-side.js', format: 'es', sourcemap: true },
+    plugins: [babel()]
+  },
+  // React Native:
+  {
+    external,
+    input: 'src/platform/react-native/client.js',
+    output: {
+      file: packageJson['react-native'],
+      format: 'es',
+      sourcemap: true
+    },
     plugins: [babel()]
   }
 ]
