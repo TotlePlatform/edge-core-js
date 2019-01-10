@@ -47,12 +47,12 @@ export type EdgeIo = {
 }
 
 export type EdgeCorePluginOptions = {
-  io: EdgeIo
+  initOptions: Object, // Load-time options (like API keys)
+  io: EdgeIo,
+  pluginDisklet: Disklet // Plugin local storage
 }
 
-export type EdgePluginEnvironment = {
-  io: EdgeIo,
-  initOptions?: Object, // Load-time options (like API keys)
+export type EdgePluginEnvironment = EdgeCorePluginOptions & {
   userSettings?: Object // User-adjustable settings
 }
 
@@ -374,12 +374,6 @@ export type EdgeCurrencyPlugin = {
   +otherMethods?: Object
 }
 
-export type EdgeCurrencyPluginFactory = {
-  +pluginType: 'currency',
-  +pluginName: string,
-  makePlugin(opts: EdgeCorePluginOptions): Promise<EdgeCurrencyPlugin>
-}
-
 // wallet --------------------------------------------------------------
 
 export type EdgeBalances = { [currencyCode: string]: string }
@@ -566,11 +560,6 @@ export type EdgeExchangePlugin = {
   fetchExchangeRates(
     pairHints: Array<EdgeExchangePairHint>
   ): Promise<Array<EdgeExchangePair>>
-}
-
-export type EdgeExchangePluginFactory = {
-  +pluginType: 'exchange',
-  makePlugin(opts: EdgeCorePluginOptions): Promise<EdgeExchangePlugin>
 }
 
 // ---------------------------------------------------------------------
@@ -811,9 +800,11 @@ export type EdgeCorePlugin =
   | EdgeExchangePlugin
   | EdgeSwapPlugin
 
-export type EdgeCorePluginFactory =
-  | EdgeCurrencyPluginFactory
-  | EdgeExchangePluginFactory
+export type EdgeCorePlugins = EdgePluginMap<
+  EdgeCorePlugin | ((env: EdgeCorePluginOptions) => EdgeCorePlugin)
+>
+
+export type EdgeCorePluginsInit = EdgePluginMap<boolean | Object>
 
 export type EdgeContextOptions = {
   apiKey: string,
@@ -821,11 +812,7 @@ export type EdgeContextOptions = {
   authServer?: string,
   hideKeys?: boolean,
   path?: string, // Only used on node.js
-  plugins?: Array<EdgeCorePluginFactory>,
-  changellyInit?: { apiKey: string, secret: string },
-  changeNowKey?: string,
-  faastInit?: { affiliateId: string, affiliateMargin?: number },
-  shapeshiftKey?: string
+  plugins?: EdgeCorePluginsInit
 }
 
 // parameters ----------------------------------------------------------
@@ -969,8 +956,6 @@ export type {
   EdgeConsole as AbcConsole,
   EdgeScryptFunction as AbcScryptFunction,
   EdgeIo as AbcIo,
-  EdgeCorePluginFactory as AbcCorePluginFactory,
-  EdgeCorePluginOptions as AbcCorePluginOptions,
   EdgeContextOptions as AbcContextOptions,
   EdgeContext as AbcContext,
   EdgePasswordRules as AbcPasswordRules,
@@ -1003,13 +988,10 @@ export type {
   EdgeCurrencyEngineOptions as AbcCurrencyEngineOptions,
   EdgeCurrencyEngine as AbcCurrencyEngine,
   EdgeCurrencyPlugin as AbcCurrencyPlugin,
-  EdgeCurrencyPluginFactory as AbcCurrencyPluginFactory,
   EdgeExchangePairHint as AbcExchangePairHint,
   EdgeExchangePair as AbcExchangePair,
   EdgeExchangePlugin as AbcExchangePlugin,
-  EdgeExchangePluginFactory as AbcExchangePluginFactory,
   // Wrong names:
-  EdgeCorePluginFactory as AbcCorePlugin,
   EdgeContextOptions as AbcMakeContextOpts,
   EdgeCurrencyEngineOptions as AbcMakeEngineOptions,
   EdgeCurrencyEngineCallbacks as AbcCurrencyPluginCallbacks,

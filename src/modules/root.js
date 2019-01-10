@@ -10,9 +10,15 @@ import {
   type EdgeIo
 } from '../types/types.js'
 import { type RootAction } from './actions.js'
-import { loadPlugins } from './plugins/plugins-actions.js'
+import {
+  addEdgeCorePlugins,
+  lockEdgeCorePlugins,
+  watchPlugins
+} from './plugins/plugins-actions.js'
 import { type RootProps, rootPixie } from './root-pixie.js'
 import { type RootState, reducer } from './root-reducer.js'
+
+export { addEdgeCorePlugins, lockEdgeCorePlugins }
 
 const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -32,12 +38,8 @@ export async function makeContext (
     apiKey,
     appId = '',
     authServer = 'https://auth.airbitz.co/api',
-    changellyInit = void 0,
-    faastInit = void 0,
     hideKeys = false,
-    plugins = [],
-    shapeshiftKey = void 0,
-    changeNowKey = void 0
+    plugins: pluginsInit = {}
   } = opts
 
   if (apiKey == null) {
@@ -59,11 +61,11 @@ export async function makeContext (
   const redux = createStore(reducer, enhancers)
   redux.dispatch({
     type: 'INIT',
-    payload: { apiKey, appId, authServer, hideKeys, stashes }
+    payload: { apiKey, appId, authServer, hideKeys, pluginsInit, stashes }
   })
 
-  // Load the plugins in the background:
-  loadPlugins(io, plugins, redux.dispatch)
+  // Subscribe to new plugins:
+  const closePlugins = watchPlugins(io, pluginsInit, redux.dispatch)
 
   // Start the pixie tree:
   const mirror = { output: {} }
@@ -75,6 +77,7 @@ export async function makeContext (
         ...props,
         close () {
           closePixie()
+          closePlugins()
           redux.dispatch({ type: 'CLOSE' })
         },
         io,
@@ -82,12 +85,7 @@ export async function makeContext (
           if (mirror.output.context && mirror.output.context.api) {
             emit(mirror.output.context.api, 'error', error)
           }
-        },
-        plugins,
-        changellyInit,
-        changeNowKey,
-        faastInit,
-        shapeshiftKey
+        }
       })
     ),
     e => console.error(e),
