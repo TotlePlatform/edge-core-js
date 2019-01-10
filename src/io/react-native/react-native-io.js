@@ -7,14 +7,7 @@ import HmacDRBG from 'hmac-drbg'
 import { base64 } from 'rfc4648'
 
 import { type EdgeIo } from '../../types/types.js'
-import {
-  Socket,
-  TLSSocket,
-  pbkdf2,
-  randomBytes,
-  scrypt,
-  secp256k1
-} from './native-libs.js'
+import { randomBytes, scrypt } from './native-libs.js'
 
 /**
  * Wraps the native `randomBytes` function in a `Promise`.
@@ -54,9 +47,9 @@ export function makeReactNativeIo (): Promise<EdgeIo> {
   if (!isReactNative) {
     throw new Error('This function only works on React Native')
   }
-  if (typeof Socket !== 'function' || typeof randomBytes !== 'function') {
+  if (typeof randomBytes !== 'function') {
     throw new Error(
-      'Please install & link the following libraries: react-native-fast-crypto react-native-fs react-native-randombytes react-native-tcp'
+      'Please install & link the following libraries: react-native-fast-crypto react-native-fs react-native-randombytes'
     )
   }
 
@@ -65,8 +58,6 @@ export function makeReactNativeIo (): Promise<EdgeIo> {
       // Crypto:
       random: makeRandomGenerator(entropy),
       scrypt,
-      pbkdf2,
-      secp256k1,
 
       // Local io:
       console: {
@@ -78,8 +69,6 @@ export function makeReactNativeIo (): Promise<EdgeIo> {
 
       // Networking:
       fetch: (...rest) => window.fetch(...rest),
-      Socket,
-      TLSSocket,
       WebSocket: window.WebSocket
     }
   })

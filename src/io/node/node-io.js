@@ -8,14 +8,10 @@ import { scrypt } from '../../util/crypto/scrypt.js'
 // Dynamically import platform-specific stuff:
 let crypto
 let fetch
-let net
-let tls
 let WebSocket
 try {
   crypto = require('crypto')
   fetch = require('node-fetch')
-  net = require('net')
-  tls = require('tls')
   WebSocket = require('ws')
 } catch (e) {}
 
@@ -50,8 +46,6 @@ export function makeNodeIo (path: string): EdgeIo {
 
     // Networking:
     fetch,
-    Socket: net.Socket,
-    TLSSocket: tls.TLSSocket,
     WebSocket
   }
 }
