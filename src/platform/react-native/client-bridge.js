@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
 import RNFS from 'react-native-fs'
 import { WebView } from 'react-native-webview'
-import { Bridge } from 'yaob'
+import { Bridge, bridgifyObject } from 'yaob'
 
 import { makeClientIo } from './client-io.js'
 import type { ClientIo, ServerApi } from './server-api.js'
@@ -14,7 +14,8 @@ import type { ClientIo, ServerApi } from './server-api.js'
 type Props = {
   debug?: boolean,
   onError(e: Object): mixed,
-  onLoad(io: ClientIo, root: ServerApi): Promise<mixed>
+  onLoad(io: ClientIo, root: ServerApi): Promise<mixed>,
+  nativeIo?: Array<Object>
 }
 
 /**
@@ -38,6 +39,11 @@ export class EdgeCoreBridge extends Component<Props> {
 
     Promise.all([makeClientIo(), this.bridge.getRoot()])
       .then(([io, root]) => {
+        if (props.nativeIo != null) {
+          for (const item of props.nativeIo) io = { ...item, ...io }
+          bridgifyObject(io)
+        }
+
         this.root = root
         return props.onLoad(io, root)
       })

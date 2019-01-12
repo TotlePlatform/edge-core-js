@@ -49,7 +49,15 @@ function makeIo (clientIo: ClientIo): EdgeIo {
     WebSocket: window.WebSocket,
 
     random: makeRandomFunction(base64.parse(clientIo.entropy)),
-    scrypt
+    scrypt,
+
+    // ugh:
+    // $FlowFixMe
+    pbkdf2: clientIo.pbkdf2,
+    // $FlowFixMe
+    secp256k1: clientIo.secp256k1,
+    // $FlowFixMe
+    makeSocket: clientIo.makeSocket
   }
 }
 

@@ -38,7 +38,8 @@ export function MakeEdgeContext (props: {
   debug?: boolean,
   onError?: (e: any) => mixed,
   onLoad: (context: EdgeContext) => mixed,
-  options: EdgeContextOptions
+  options: EdgeContextOptions,
+  nativeIo?: Array<Object>
 }) {
   const { onError = onErrorFallback, onLoad } = props
   if (onLoad == null) {
@@ -52,6 +53,7 @@ export function MakeEdgeContext (props: {
       onLoad={(io, root) =>
         root.makeEdgeContext(io, props.options).then(onLoad)
       }
+      nativeIo={props.nativeIo}
     />
   )
 }
@@ -60,7 +62,8 @@ export function MakeFakeEdgeWorld (props: {
   debug?: boolean,
   onError?: (e: any) => mixed,
   onLoad: (world: EdgeFakeWorld) => mixed,
-  users?: Array<EdgeFakeUser>
+  users?: Array<EdgeFakeUser>,
+  nativeIo?: Array<Object>
 }) {
   const { onError = onErrorFallback, onLoad } = props
   if (onLoad == null) {
@@ -74,6 +77,7 @@ export function MakeFakeEdgeWorld (props: {
       onLoad={(io, root) =>
         root.makeFakeEdgeWorld(io, props.users).then(onLoad)
       }
+      nativeIo={props.nativeIo}
     />
   )
 }
