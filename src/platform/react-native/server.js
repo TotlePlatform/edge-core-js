@@ -3,6 +3,10 @@
 import { Bridge, emit } from 'yaob'
 
 import { addEdgeCorePlugins, lockEdgeCorePlugins } from '../../modules/root.js'
+import { makeChangellyPlugin } from '../../modules/swap/changelly-plugin.js'
+import { makeChangeNowPlugin } from '../../modules/swap/changenow-plugin'
+import { makeFaastPlugin } from '../../modules/swap/faast-plugin.js'
+import { makeShapeshiftPlugin } from '../../modules/swap/shapeshift-plugin.js'
 import { serverApi } from './server-api.js'
 
 window.addEdgeCorePlugins = addEdgeCorePlugins
@@ -57,3 +61,11 @@ function sendRoot () {
   }
 }
 sendRoot()
+
+// Swap plugins:
+addEdgeCorePlugins({
+  changelly: makeChangellyPlugin,
+  changenow: makeChangeNowPlugin,
+  faast: makeFaastPlugin,
+  shapeshift: makeShapeshiftPlugin
+})
