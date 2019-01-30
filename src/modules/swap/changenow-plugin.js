@@ -8,12 +8,11 @@ import {
   SwapCurrencyError
 } from '../../types/error.js'
 import {
+  type EdgeCorePluginOptions,
   type EdgeCurrencyWallet,
-  type EdgePluginEnvironment,
   type EdgeSwapPlugin,
   type EdgeSwapPluginQuote,
-  type EdgeSwapRequest,
-  type EdgeSwapTools
+  type EdgeSwapRequest
 } from '../../types/types.js'
 import { makeSwapPluginQuote } from './swap-helpers.js'
 
@@ -57,26 +56,10 @@ async function getAddress (
     : addressInfo.publicAddress
 }
 
-function checkReply (reply: Object, request?: EdgeSwapRequest) {
-  if (reply.error != null) {
-    if (
-      request != null &&
-      (reply.error.code === -32602 ||
-        /Invalid currency:/.test(reply.error.message))
-    ) {
-      throw new SwapCurrencyError(
-        swapInfo,
-        request.fromCurrencyCode,
-        request.toCurrencyCode
-      )
-    }
-
-    throw new Error('ChangeNow error: ' + JSON.stringify(reply.error))
-  }
-}
-
-function makeChangeNowTools (env): EdgeSwapTools {
-  const { initOptions = {}, io } = env
+export function makeChangeNowPlugin (
+  opts: EdgeCorePluginOptions
+): EdgeSwapPlugin {
+  const { initOptions, io } = opts
 
   if (initOptions.apiKey == null) {
     throw new Error('No ChangeNow apiKey provided.')
@@ -106,18 +89,13 @@ function makeChangeNowTools (env): EdgeSwapTools {
     return reply.json()
   }
 
-  const out: EdgeSwapTools = {
-    needsActivation: false,
+  const out: EdgeSwapPlugin = {
+    swapInfo,
 
-    async changeUserSettings (userSettings: Object): Promise<mixed> {},
-
-    async fetchCurrencies (): Promise<Array<string>> {
-      const reply = await get('market-info/fixed-rate/' + apiKey)
-      checkReply(reply)
-      return reply.result.map(code => code.toUpperCase())
-    },
-
-    async fetchQuote (request: EdgeSwapRequest): Promise<EdgeSwapPluginQuote> {
+    async fetchSwapQuote (
+      request: EdgeSwapRequest,
+      userSettings: Object
+    ): Promise<EdgeSwapPluginQuote> {
       // Grab addresses:
       const [fromAddress, toAddress] = await Promise.all([
         getAddress(request.fromWallet, request.fromCurrencyCode),
@@ -387,13 +365,4 @@ function makeChangeNowTools (env): EdgeSwapTools {
   }
 
   return out
-}
-
-export const changenowPlugin: EdgeSwapPlugin = {
-  pluginType: 'swap',
-  swapInfo,
-
-  async makeTools (env: EdgePluginEnvironment): Promise<EdgeSwapTools> {
-    return makeChangeNowTools(env)
-  }
 }

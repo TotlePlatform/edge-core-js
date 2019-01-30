@@ -5,12 +5,11 @@ import { base16 } from 'rfc4648'
 
 import { SwapBelowLimitError, SwapCurrencyError } from '../../types/error.js'
 import {
+  type EdgeCorePluginOptions,
   type EdgeCurrencyWallet,
-  type EdgePluginEnvironment,
   type EdgeSwapPlugin,
   type EdgeSwapPluginQuote,
-  type EdgeSwapRequest,
-  type EdgeSwapTools
+  type EdgeSwapRequest
 } from '../../types/types.js'
 import { hmacSha512 } from '../../util/crypto/crypto.js'
 import { utf8 } from '../../util/encoding.js'
@@ -75,8 +74,10 @@ function checkReply (reply: Object, request?: EdgeSwapRequest) {
   }
 }
 
-function makeChangellyTools (env): EdgeSwapTools {
-  const { initOptions = {}, io } = env
+export function makeChangellyPlugin (
+  opts: EdgeCorePluginOptions
+): EdgeSwapPlugin {
+  const { initOptions, io } = opts
 
   if (initOptions.apiKey == null || initOptions.secret == null) {
     throw new Error('No Changelly apiKey or secret provided.')
@@ -105,23 +106,13 @@ function makeChangellyTools (env): EdgeSwapTools {
     return out
   }
 
-  const out: EdgeSwapTools = {
-    needsActivation: false,
+  const out: EdgeSwapPlugin = {
+    swapInfo,
 
-    async changeUserSettings (userSettings: Object): Promise<mixed> {},
-
-    async fetchCurrencies (): Promise<Array<string>> {
-      const reply = await call({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'getCurrencies',
-        params: {}
-      })
-      checkReply(reply)
-      return reply.result.map(code => code.toUpperCase())
-    },
-
-    async fetchQuote (request: EdgeSwapRequest): Promise<EdgeSwapPluginQuote> {
+    async fetchSwapQuote (
+      request: EdgeSwapRequest,
+      userSettings: Object
+    ): Promise<EdgeSwapPluginQuote> {
       // Grab addresses:
       const [fromAddress, toAddress] = await Promise.all([
         getAddress(request.fromWallet, request.fromCurrencyCode),
@@ -250,13 +241,4 @@ function makeChangellyTools (env): EdgeSwapTools {
   }
 
   return out
-}
-
-export const changellyPlugin: EdgeSwapPlugin = {
-  pluginType: 'swap',
-  swapInfo,
-
-  async makeTools (env: EdgePluginEnvironment): Promise<EdgeSwapTools> {
-    return makeChangellyTools(env)
-  }
 }

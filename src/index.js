@@ -2,17 +2,17 @@
 
 import * as internal from './internal.js'
 import { addEdgeCorePlugins } from './modules/root.js'
-import { changellyPlugin } from './modules/swap/changelly-plugin.js'
-import { changenowPlugin } from './modules/swap/changenow-plugin'
-import { faastPlugin } from './modules/swap/faast-plugin.js'
-import { shapeshiftPlugin } from './modules/swap/shapeshift-plugin.js'
+import { makeChangellyPlugin } from './modules/swap/changelly-plugin.js'
+import { makeChangeNowPlugin } from './modules/swap/changenow-plugin.js'
+import { makeFaastPlugin } from './modules/swap/faast-plugin.js'
+import { makeShapeshiftPlugin } from './modules/swap/shapeshift-plugin.js'
 import * as error from './types/error.js'
 
 addEdgeCorePlugins({
-  changelly: changellyPlugin,
-  changenow: changenowPlugin,
-  faast: faastPlugin,
-  shapeshift: shapeshiftPlugin
+  changelly: makeChangellyPlugin,
+  changenow: makeChangeNowPlugin,
+  faast: makeFaastPlugin,
+  shapeshift: makeShapeshiftPlugin
 })
 
 // Sub-module exports:
