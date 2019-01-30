@@ -15,7 +15,7 @@ import {
   type EdgeSpendTarget,
   type EdgeSwapPlugin,
   type EdgeSwapPluginQuote,
-  type EdgeSwapQuoteOptions,
+  type EdgeSwapRequest,
   type EdgeSwapTools
 } from '../../types/types.js'
 import { makeSwapPluginQuote } from './swap-helpers.js'
@@ -143,7 +143,7 @@ function makeFaastTools (env: EdgePluginEnvironment): EdgeSwapTools {
       return out
     },
 
-    async fetchQuote (opts: EdgeSwapQuoteOptions): Promise<EdgeSwapPluginQuote> {
+    async fetchQuote (request: EdgeSwapRequest): Promise<EdgeSwapPluginQuote> {
       const {
         fromCurrencyCode,
         fromWallet,
@@ -151,7 +151,7 @@ function makeFaastTools (env: EdgePluginEnvironment): EdgeSwapTools {
         quoteFor,
         toCurrencyCode,
         toWallet
-      } = opts
+      } = request
       if (toCurrencyCode === fromCurrencyCode) {
         throw new SwapCurrencyError(swapInfo, fromCurrencyCode, toCurrencyCode)
       }
@@ -289,7 +289,7 @@ function makeFaastTools (env: EdgePluginEnvironment): EdgeSwapTools {
 
       // Convert that to the output format:
       return makeSwapPluginQuote(
-        opts,
+        request,
         fromNativeAmount,
         toNativeAmount,
         tx,
