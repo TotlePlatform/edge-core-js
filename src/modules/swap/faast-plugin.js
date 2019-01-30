@@ -129,7 +129,7 @@ export function makeFaastPlugin (opts: EdgeCorePluginOptions): EdgeSwapPlugin {
 
     async fetchSwapQuote (
       request: EdgeSwapRequest,
-      userSettings: Object
+      userSettings: Object | void
     ): Promise<EdgeSwapPluginQuote> {
       const {
         fromCurrencyCode,

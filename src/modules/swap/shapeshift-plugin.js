@@ -142,7 +142,7 @@ export function makeShapeshiftPlugin (
 
     async fetchSwapQuote (
       request: EdgeSwapRequest,
-      userSettings: Object
+      userSettings: Object | void
     ): Promise<EdgeSwapPluginQuote> {
       const {
         fromCurrencyCode,
@@ -152,10 +152,11 @@ export function makeShapeshiftPlugin (
         toCurrencyCode,
         toWallet
       } = request
-      const { accessToken } = userSettings
-      if (userSettings.accessToken == null) {
+      if (userSettings == null || userSettings.accessToken == null) {
         throw new SwapPermissionError(swapInfo.pluginName, 'needsActivation')
       }
+      const { accessToken } = userSettings
+
       if (toCurrencyCode === fromCurrencyCode) {
         throw new SwapCurrencyError(swapInfo, fromCurrencyCode, toCurrencyCode)
       }
