@@ -3,6 +3,29 @@
 import { type Disklet, type DiskletFolder } from 'disklet'
 import { type Subscriber } from 'yaob'
 
+import * as error from './error.js'
+
+export { error }
+
+export {
+  DustSpendError,
+  errorNames,
+  InsufficientFundsError,
+  SpendToSelfError,
+  NetworkError,
+  NoAmountSpecifiedError,
+  ObsoleteApiError,
+  OtpError,
+  PasswordError,
+  PendingFundsError,
+  SameCurrencyError,
+  SwapAboveLimitError,
+  SwapBelowLimitError,
+  SwapCurrencyError,
+  SwapPermissionError,
+  UsernameError
+} from './error.js'
+
 // ---------------------------------------------------------------------
 // io types
 // ---------------------------------------------------------------------
