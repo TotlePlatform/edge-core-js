@@ -2,16 +2,16 @@
 
 import { isReactNative } from 'detect-bundler'
 
-import { makeContext } from './core/root.js'
-import { makeBrowserIo } from './io/browser/browser-io.js'
-import { prepareFakeIos } from './io/fake/fake-io.js'
-import { isNode, makeNodeIo } from './io/node/node-io.js'
-import { makeReactNativeIo } from './io/react-native/react-native-io.js'
+import { makeBrowserIo } from '../io/browser/browser-io.js'
+import { prepareFakeIos } from '../io/fake/fake-io.js'
+import { isNode, makeNodeIo } from '../io/node/node-io.js'
+import { makeReactNativeIo } from '../io/react-native/react-native-io.js'
 import {
   type EdgeContext,
   type EdgeContextOptions,
   type EdgeFakeContextOptions
-} from './types/types.js'
+} from '../types/types.js'
+import { makeContext } from './root.js'
 
 /**
  * Initializes the Edge core library,

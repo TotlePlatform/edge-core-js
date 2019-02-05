@@ -46,7 +46,7 @@ export default [
   // Client-side methods:
   {
     external: ['yaob'],
-    input: 'src/client-side.js',
+    input: 'src/core/client-side.js',
     output: { file: 'lib/client-side.js', format: 'es', sourcemap: true },
     plugins: [babel()]
   }

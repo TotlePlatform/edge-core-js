@@ -2,7 +2,6 @@
 
 import { bridgifyObject, onMethod, watchMethod } from 'yaob'
 
-import { checkPasswordRules, fixUsername } from '../../client-side.js'
 import {
   type EdgeAccount,
   type EdgeAccountOptions,
@@ -14,6 +13,7 @@ import {
 } from '../../types/types.js'
 import { base58 } from '../../util/encoding.js'
 import { findAppLogin, makeAccount } from '../account/account-init.js'
+import { checkPasswordRules, fixUsername } from '../client-side.js'
 import { createLogin, usernameAvailable } from '../login/create.js'
 import { requestEdgeLogin } from '../login/edge.js'
 import { getStash } from '../login/login-selectors.js'

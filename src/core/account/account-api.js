@@ -3,7 +3,6 @@
 import { type Disklet } from 'disklet'
 import { bridgifyObject, onMethod, watchMethod } from 'yaob'
 
-import { AccountSync } from '../../client-side.js'
 import {
   type EdgeAccount,
   type EdgeCreateCurrencyWalletOptions,
@@ -25,6 +24,7 @@ import {
 import { signEthereumTransaction } from '../../util/crypto/ethereum.js'
 import { deprecate } from '../../util/deprecate.js'
 import { base58 } from '../../util/encoding.js'
+import { AccountSync } from '../client-side.js'
 import { makeExchangeCache } from '../exchange/exchange-api.js'
 import {
   createCurrencyWallet,

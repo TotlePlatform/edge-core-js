@@ -4,7 +4,6 @@ import { add, div, lte, mul, sub } from 'biggystring'
 import { type Disklet } from 'disklet'
 import { bridgifyObject, onMethod, watchMethod } from 'yaob'
 
-import { CurrencyWalletSync } from '../../../client-side.js'
 import {
   type EdgeBalances,
   type EdgeCurrencyCodeOptions,
@@ -24,6 +23,7 @@ import {
   type EdgeTransaction
 } from '../../../types/types.js'
 import { filterObject, mergeDeeply } from '../../../util/util.js'
+import { CurrencyWalletSync } from '../../client-side.js'
 import { type ApiInput } from '../../root-pixie.js'
 import { makeStorageWalletApi } from '../../storage/storage-api.js'
 import { getCurrencyMultiplier } from '../currency-selectors.js'
