@@ -34,4 +34,4 @@ export {
   UsernameError
 } from './types/error.js'
 export { makeEdgeContext, makeFakeContexts } from './makeContext.js'
-export { destroyAllContexts } from './modules/root.js'
+export { destroyAllContexts } from './core/root.js'
