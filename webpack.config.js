@@ -21,7 +21,7 @@ const externals = [
 
 module.exports = {
   devtool: 'source-map',
-  entry: './build/react-native.js',
+  entry: './lib/react-native.js',
   externals,
   module: {
     rules: [

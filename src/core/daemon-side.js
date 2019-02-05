@@ -1,34 +1,13 @@
 // @flow
 
-import { isReactNative } from 'detect-bundler'
-
-import { makeBrowserIo } from '../io/browser/browser-io.js'
-import { prepareFakeIos } from '../io/fake/fake-io.js'
-import { isNode, makeNodeIo } from '../io/node/node-io.js'
-import { makeReactNativeIo } from '../io/react-native/react-native-io.js'
+import { makeFakeIos, prepareFakeIos } from '../io/fake/fake-io.js'
+import { fakeUser } from '../io/fake/fakeUser.js'
+import { fakeUser1 } from '../io/fake/fakeUser1.js'
 import {
   type EdgeContext,
-  type EdgeContextOptions,
   type EdgeFakeContextOptions
 } from '../types/types.js'
-import { makeContext } from './root.js'
-
-/**
- * Initializes the Edge core library,
- * automatically selecting the appropriate platform.
- */
-export function makeEdgeContext (
-  opts: EdgeContextOptions
-): Promise<EdgeContext> {
-  if (isReactNative) {
-    return makeReactNativeIo().then(io => makeContext(io, opts))
-  }
-  if (isNode) {
-    const { path = './edge' } = opts
-    return makeContext(makeNodeIo(path), opts)
-  }
-  return makeContext(makeBrowserIo(), opts)
-}
+import { destroyAllContexts, makeContext } from './root.js'
 
 /**
  * Creates one or more fake Edge core library instances for testing.
@@ -48,3 +27,5 @@ export async function makeFakeContexts (
     Promise.all(ios.map((io, i) => makeContext(io, opts[i])))
   )
 }
+
+export { destroyAllContexts, fakeUser, fakeUser1, makeContext, makeFakeIos }

@@ -1,6 +1,5 @@
 // @flow
 
-import { isReactNative } from 'detect-bundler'
 import { makeReactNativeDisklet } from 'disklet'
 import hashjs from 'hash.js'
 import HmacDRBG from 'hmac-drbg'
@@ -51,9 +50,6 @@ function makeRandomGenerator (
  * Gathers the IO resources needed by the Edge core library.
  */
 export function makeReactNativeIo (): Promise<EdgeIo> {
-  if (!isReactNative) {
-    throw new Error('This function only works on React Native')
-  }
   if (typeof Socket !== 'function' || typeof randomBytes !== 'function') {
     throw new Error(
       'Please install & link the following libraries: react-native-fast-crypto react-native-fs react-native-randombytes react-native-tcp'
