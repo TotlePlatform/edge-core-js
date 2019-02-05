@@ -1,9 +1,7 @@
 // @flow
 
 // Sub-module exports:
-import * as internal from './internal.js'
-
-export { internal }
+export { internal } from './internal.js'
 export * from './types/types.js'
 
 // Ancillary exports:

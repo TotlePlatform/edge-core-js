@@ -4,6 +4,15 @@
 // which makes use of some undocumented core features.
 // In the future we hope to minimize / reduce this
 
-export { hmacSha256 } from './util/crypto/crypto.js'
-export * from './util/encoding.js'
-export * from './util/util.js'
+import { hmacSha256 } from './util/crypto/crypto.js'
+import { base58, utf8 } from './util/encoding.js'
+import { filterObject, mergeDeeply, softCat } from './util/util.js'
+
+export const internal = {
+  base58,
+  filterObject,
+  hmacSha256,
+  mergeDeeply,
+  softCat,
+  utf8
+}
